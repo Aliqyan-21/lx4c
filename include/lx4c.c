@@ -122,20 +122,30 @@ static lx4c_token tokenize_next(lx4c_lexer *lex) {
   return tok;
 }
 
+/* ----------- */
+/* lx4c Parser */
+/* ----------- */
+
+typedef struct {
+  lx4c_lexer lex;
+  lx4c_token curr;
+  lx4c_token peek;
+} lx4c_parser;
+
+static void parser_init(lx4c_parser *p, const char *src, size_t len) {
+  lexer_init(&p->lex, src, len);
+  p->curr = tokenize_next(&p->lex); /* first */
+  p->peek = tokenize_next(&p->lex); /* second */
+}
+
+static lx4c_token parser_advance(lx4c_parser *p) {
+  lx4c_token tok = p->curr;
+  p->curr        = p->peek;
+  p->peek        = tokenize_next(&p->lex); /* second */
+  return tok;
+}
+
 lx4c_node *lx4c_parse(const char *latex, size_t len) {
-  const char *test = "\\frac{x^{2}}{\\alpha + 3.14}";
-  lx4c_lexer  lex;
-  lexer_init(&lex, test, strlen(test));
-
-  static const char *tok_names[] = {
-    "IDENT",  "NUMBER", "CMD", "LBRACE", "RBRACE", "LBRACKET", "RBRACKET",
-    "LPAREN", "RPAREN", "SUP", "SUB",    "OTHER",  "EOF"};
-
-  lx4c_token tok;
-  do {
-    tok = tokenize_next(&lex);
-    printf("%-10s | %.*s\n", tok_names[tok.type], (int)tok.len, tok.start);
-  } while (tok.type != TOK_EOF);
-
-  return NULL;
+  lx4c_parser p;
+  parser_init(&p, latex, len);
 }

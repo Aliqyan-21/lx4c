@@ -1,6 +1,6 @@
-#include <stdio.h>
+#include "lx4c.h"
 
 int main(void) {
-  printf("Hello, lx4c\n");
+  lx4c_parse("", 10);
   return 0;
 }

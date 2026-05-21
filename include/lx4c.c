@@ -177,6 +177,13 @@ cmd_entry CMD_TABLE[] = {
   {"to",         CMD_OP,    "→"  },
   {"rightarrow", CMD_OP,    "→"  },
   {"leftarrow",  CMD_OP,    "←"  },
+  {"forall",     CMD_OP,    "∀"  },
+  {"exists",     CMD_OP,    "∃"  },
+  {"neg",        CMD_OP,    "¬"  },
+  {"land",       CMD_OP,    "∧"  },
+  {"lor",        CMD_OP,    "∨"  },
+  {"equiv",      CMD_OP,    "≡"  },
+  {"sim",        CMD_OP,    "∼"  },
   /* the structural */
   {"frac",       CMD_FRAC,  NULL },
   {"sqrt",       CMD_SQRT,  NULL },
@@ -184,6 +191,20 @@ cmd_entry CMD_TABLE[] = {
   {"vec",        CMD_VEC,   "→"  },
   {"underline",  CMD_UNDER, "_"  },
   {"text",       CMD_TEXT,  NULL },
+  /* the accents */
+  {"hat",        CMD_OVER,  "^"  },
+  {"bar",        CMD_OVER,  "‾"  },
+  {"tilde",      CMD_OVER,  "~"  },
+  {"dot",        CMD_OVER,  "˙"  },
+  {"ddot",       CMD_OVER,  "¨"  },
+  /* the ellipsis */
+  {"cdots",      CMD_OP,    "⋯"  },
+  {"ldots",      CMD_OP,    "…"  },
+  {"vdots",      CMD_OP,    "⋮"  },
+  /* the spacing */
+  {"quad",       CMD_OP,    " "  },
+  /* the binomial */
+  {"binom",      CMD_FRAC,  NULL },
 };
 
 typedef struct {

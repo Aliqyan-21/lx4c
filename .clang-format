@@ -1,5 +1,5 @@
 ---
-Language:        C
+Language:        Cpp
 AccessModifierOffset: -2
 AlignAfterOpenBracket: Align
 AlignArrayOfStructures: Left
@@ -79,7 +79,6 @@ QualifierAlignment: Leave
 CompactNamespaces: false
 ConstructorInitializerIndentWidth: 2
 ContinuationIndentWidth: 2
-Cpp11BracedListStyle: true
 DeriveLineEnding: true
 DerivePointerAlignment: false
 DisableFormat:   false
@@ -143,9 +142,15 @@ PenaltyIndentedWhitespace: 0
 PointerAlignment: Right
 PPIndentWidth:   -1
 RawStringFormats:
-  - Language:        C
+  - Language:        Cpp
     Delimiters:
-      - c
+      - cc
+      - CC
+      - cpp
+      - Cpp
+      - CPP
+      - 'c++'
+      - 'C++'
     CanonicalDelimiter: ''
     BasedOnStyle:    google
   - Language:        TextProto

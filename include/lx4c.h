@@ -2,10 +2,10 @@
 #define LX4C_H
 
 #include <stddef.h>
+#include <stdlib.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 
 typedef enum lx4c_node_type {
   /* leaf nodes */
@@ -44,6 +44,27 @@ typedef struct lx4c_node {
   int         child_count;
 } lx4c_node;
 
+typedef enum {
+  CMD_IDENT,
+  CMD_OP,
+  CMD_FRAC,
+  CMD_SQRT,
+  CMD_OVER,
+  CMD_UNDER,
+  CMD_VEC,
+  CMD_TEXT,
+  CMD_UNKNOWN,
+} cmd_kind;
+
+typedef struct {
+  const char *name;
+  cmd_kind    kind;
+  const char *symbol;
+} cmd_entry;
+
+/* the cmd table is cmd -> symbol table */
+extern cmd_entry CMD_TABLE[];
+
 /* Parse a latex math string, args:
  * - latex : input string, does not neet to be null-terminated
  * - len : length of input
@@ -53,6 +74,9 @@ lx4c_node *lx4c_parse(const char *latex, size_t len);
 
 /* free the full AST returned by the above function */
 void lx4c_free(lx4c_node *root);
+
+/* print ast: for just utility */
+void print_ast(lx4c_node *root);
 
 #ifdef __cplusplus
 }

@@ -445,3 +445,12 @@ lx4c_node *lx4c_parse(const char *latex, size_t len) {
   parser_init(&p, latex, len);
   return parse_row(&p, TOK_EOF);
 }
+
+void lx4c_free(lx4c_node *root) {
+  if (!root) { return; }
+  for (int i=0; i<root->child_count;++i) {
+    lx4c_free(root->children[i]);
+  }
+  free(root->children);
+  free(root);
+}

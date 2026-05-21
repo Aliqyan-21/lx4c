@@ -295,9 +295,10 @@ static lx4c_node *parse_atom(lx4c_parser *p) {
           /* \sqrt[n]{x} or \sqrt{x} */
           if (p->curr.type == TOK_LBRACKET) {
             parser_advance(p);
-            lx4c_node *root_n = parse_group(p);
-            lx4c_node *body   = parse_group(p);
-            n                 = node_alloc(LX4C_NODE_ROOT);
+            lx4c_node *root_n = parse_row(p, TOK_RBRACKET);
+            if (p->curr.type == TOK_RBRACKET) { parser_advance(p); }
+            lx4c_node *body = parse_group(p);
+            n               = node_alloc(LX4C_NODE_ROOT);
             if (!n) { return NULL; }
             n->children = malloc(2 * sizeof(lx4c_node *));
             if (!n->children) { return NULL; }
@@ -361,6 +362,14 @@ static lx4c_node *parse_atom(lx4c_parser *p) {
       return n;
 
     case TOK_LBRACE: return parse_group(p);
+    case TOK_LPAREN:
+    case TOK_RPAREN:
+    case TOK_LBRACKET:
+    case TOK_RBRACKET:
+      n            = node_alloc(LX4C_NODE_OP);
+      n->value     = tok.start;
+      n->value_len = tok.len;
+      return n;
     default: return NULL;
   }
 }

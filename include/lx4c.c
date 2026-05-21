@@ -2,6 +2,7 @@
 #include <ctype.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 typedef enum lx4c_token_type {
@@ -145,7 +146,173 @@ static lx4c_token parser_advance(lx4c_parser *p) {
   return tok;
 }
 
+const int CMD_T_SIZE = (sizeof(CMD_TABLE) / sizeof(CMD_TABLE[0]));
+
+static const cmd_entry *cmd_lookup(const char *name, size_t len) {
+  for (size_t i = 0; i < CMD_T_SIZE; ++i) {
+    if (strlen(CMD_TABLE[i].name) == len &&
+        strncmp(CMD_TABLE[i].name, name, len) == 0) {
+      return &CMD_TABLE[i];
+    }
+  }
+  return NULL;
+}
+
+static lx4c_node *parse_group(lx4c_parser *p) {
+  // todo: implement
+  return NULL;
+}
+
+static lx4c_node *node_alloc(lx4c_node_type type) {
+  lx4c_node *n = calloc(1, sizeof(lx4c_node));
+  if (n) { n->type = type; }
+  return n;
+}
+
+static lx4c_node *parse_atom(lx4c_parser *p) {
+  lx4c_token tok = parser_advance(p);
+  lx4c_node *n   = NULL;
+
+  switch (tok.type) {
+    case TOK_IDENT:
+      n = node_alloc(LX4C_NODE_IDENT);
+      if (!n) { return NULL; }
+      n->value     = tok.start;
+      n->value_len = tok.len;
+      n->symbol    = NULL;
+      return n;
+    case TOK_NUMBER:
+      n = node_alloc(LX4C_NODE_NUMBER);
+      if (!n) { return NULL; }
+      n->value     = tok.start;
+      n->value_len = tok.len;
+      return n;
+    case TOK_CMD: {
+      const cmd_entry *e = cmd_lookup(tok.start, tok.len);
+      if (!e) {
+        n = node_alloc(LX4C_NODE_UNKNOWN);
+        if (!n) { return NULL; }
+        n->value     = tok.start;
+        n->value_len = tok.len;
+        return n;
+      }
+      switch (e->kind) {
+        case CMD_IDENT:
+          n = node_alloc(LX4C_NODE_IDENT);
+          if (!n) { return NULL; }
+          n->value     = tok.start;
+          n->value_len = tok.len;
+          n->symbol    = e->symbol;
+          return n;
+        case CMD_OP:
+          n = node_alloc(LX4C_NODE_OP);
+          if (!n) { return NULL; }
+          n->value     = tok.start;
+          n->value_len = tok.len;
+          n->symbol    = e->symbol;
+          return n;
+        case CMD_FRAC: {
+          /* \frac{numr}{denr} */
+          lx4c_node *numr = parse_group(p);
+          lx4c_node *denr = parse_group(p);
+          n               = node_alloc(LX4C_NODE_FRAC);
+          if (!n) { return NULL; }
+          n->children = malloc(2 * sizeof(lx4c_node *));
+          if (!n->children) { return NULL; }
+          n->children[0] = numr;
+          n->children[1] = denr;
+          n->child_count = 2;
+          return n;
+        }
+        case CMD_SQRT: {
+          /* \sqrt[n]{x} or \sqrt{x} */
+          if (p->curr.type == TOK_LBRACKET) {
+            parser_advance(p);
+            lx4c_node *root_n = parse_group(p);
+            lx4c_node *body   = parse_group(p);
+            n                 = node_alloc(LX4C_NODE_ROOT);
+            if (!n) { return NULL; }
+            n->children = malloc(2 * sizeof(lx4c_node *));
+            if (!n->children) { return NULL; }
+            n->children[0] = body;
+            n->children[1] = root_n;
+            n->child_count = 2;
+          } else {
+            lx4c_node *body = parse_group(p);
+            n               = node_alloc(LX4C_NODE_SQRT);
+            if (!n) { return NULL; }
+            n->children = malloc(1 * sizeof(lx4c_node *));
+            if (!n->children) { return NULL; }
+            n->children[0] = body;
+            n->child_count = 1;
+          }
+          return n;
+        }
+        case CMD_OVER:
+        case CMD_VEC: {
+          lx4c_node *body = parse_group(p);
+          n               = node_alloc(LX4C_NODE_OVER);
+          if (!n) { return NULL; }
+          n->symbol   = e->symbol;
+          n->children = malloc(1 * sizeof(lx4c_node *));
+          if (!n->children) { return NULL; }
+          n->children[0] = body;
+          n->child_count = 1;
+          return n;
+        }
+        case CMD_UNDER: {
+          lx4c_node *body = parse_group(p);
+          n               = node_alloc(LX4C_NODE_UNDER);
+          if (!n) { return NULL; }
+          n->symbol   = e->symbol;
+          n->children = malloc(1 * sizeof(lx4c_node *));
+          if (!n->children) { return NULL; }
+          n->children[0] = body;
+          n->child_count = 1;
+          return n;
+        }
+        case CMD_TEXT: {
+          /* \text{hello} - parse raw text inside braces */
+          lx4c_node *body = parse_group(p);
+          n               = node_alloc(LX4C_NODE_TEXT);
+          if (!n) { return NULL; }
+          n->children = malloc(1 * sizeof(lx4c_node *));
+          if (!n->children) { return NULL; }
+          n->children[0] = body;
+          n->child_count = 1;
+          return n;
+        }
+        default: return NULL;
+      }
+    }
+    case TOK_OTHER:
+      n = node_alloc(LX4C_NODE_OP);
+      if (!n) { return NULL; }
+      n->value     = tok.start;
+      n->value_len = tok.len;
+      n->symbol    = NULL;
+      return n;
+
+    case TOK_LBRACE: return parse_group(p);
+    default: return NULL;
+  }
+}
+
 lx4c_node *lx4c_parse(const char *latex, size_t len) {
-  lx4c_parser p;
-  parser_init(&p, latex, len);
+  static const char *tests[] = {
+    "x", "42", "3.14", "\\alpha", "\\sin", "\\leq", "+", "\\unknown",
+  };
+
+  for (size_t i = 0; i < sizeof(tests) / sizeof(tests[0]); i++) {
+    lx4c_parser p;
+    parser_init(&p, tests[i], strlen(tests[i]));
+    lx4c_node *n = parse_atom(&p);
+    if (!n) {
+      printf("%-12s → NULL\n", tests[i]);
+      continue;
+    }
+    printf("%-12s → type=%-10d value=%.*s symbol=%s\n", tests[i], n->type,
+           (int)n->value_len, n->value, n->symbol ? n->symbol : "NULL");
+  }
+  return NULL;
 }

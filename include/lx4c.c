@@ -127,6 +127,65 @@ static lx4c_token tokenize_next(lx4c_lexer *lex) {
 /* lx4c Parser */
 /* ----------- */
 
+cmd_entry CMD_TABLE[] = {
+  /* the greek letters */
+  {"alpha",      CMD_IDENT, "α"  },
+  {"beta",       CMD_IDENT, "β"  },
+  {"gamma",      CMD_IDENT, "γ"  },
+  {"delta",      CMD_IDENT, "δ"  },
+  {"epsilon",    CMD_IDENT, "ε"  },
+  {"theta",      CMD_IDENT, "θ"  },
+  {"lambda",     CMD_IDENT, "λ"  },
+  {"mu",         CMD_IDENT, "μ"  },
+  {"pi",         CMD_IDENT, "π"  },
+  {"sigma",      CMD_IDENT, "σ"  },
+  {"phi",        CMD_IDENT, "φ"  },
+  {"omega",      CMD_IDENT, "ω"  },
+  {"Gamma",      CMD_IDENT, "Γ"  },
+  {"Delta",      CMD_IDENT, "Δ"  },
+  {"Sigma",      CMD_IDENT, "Σ"  },
+  {"Omega",      CMD_IDENT, "Ω"  },
+  /* the named functions */
+  {"sin",        CMD_IDENT, "sin"},
+  {"cos",        CMD_IDENT, "cos"},
+  {"tan",        CMD_IDENT, "tan"},
+  {"log",        CMD_IDENT, "log"},
+  {"ln",         CMD_IDENT, "ln" },
+  {"exp",        CMD_IDENT, "exp"},
+  {"max",        CMD_IDENT, "max"},
+  {"min",        CMD_IDENT, "min"},
+  {"lim",        CMD_IDENT, "lim"},
+  /* the operators */
+  {"leq",        CMD_OP,    "≤"  },
+  {"geq",        CMD_OP,    "≥"  },
+  {"neq",        CMD_OP,    "≠"  },
+  {"times",      CMD_OP,    "×"  },
+  {"cdot",       CMD_OP,    "·"  },
+  {"div",        CMD_OP,    "÷"  },
+  {"pm",         CMD_OP,    "±"  },
+  {"infty",      CMD_OP,    "∞"  },
+  {"partial",    CMD_OP,    "∂"  },
+  {"nabla",      CMD_OP,    "∇"  },
+  {"sum",        CMD_OP,    "∑"  },
+  {"prod",       CMD_OP,    "∏"  },
+  {"int",        CMD_OP,    "∫"  },
+  {"approx",     CMD_OP,    "≈"  },
+  {"in",         CMD_OP,    "∈"  },
+  {"subset",     CMD_OP,    "⊂"  },
+  {"cup",        CMD_OP,    "∪"  },
+  {"cap",        CMD_OP,    "∩"  },
+  {"to",         CMD_OP,    "→"  },
+  {"rightarrow", CMD_OP,    "→"  },
+  {"leftarrow",  CMD_OP,    "←"  },
+  /* the structural */
+  {"frac",       CMD_FRAC,  NULL },
+  {"sqrt",       CMD_SQRT,  NULL },
+  {"overline",   CMD_OVER,  "‾"  },
+  {"vec",        CMD_VEC,   "→"  },
+  {"underline",  CMD_UNDER, "_"  },
+  {"text",       CMD_TEXT,  NULL },
+};
+
 typedef struct {
   lx4c_lexer lex;
   lx4c_token curr;

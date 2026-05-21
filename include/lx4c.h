@@ -75,6 +75,9 @@ lx4c_node *lx4c_parse(const char *latex, size_t len);
 /* free the full AST returned by the above function */
 void lx4c_free(lx4c_node *root);
 
+/* print ast: for just utility */
+void print_ast(lx4c_node *root);
+
 #ifdef __cplusplus
 }
 #endif

@@ -448,9 +448,28 @@ lx4c_node *lx4c_parse(const char *latex, size_t len) {
 
 void lx4c_free(lx4c_node *root) {
   if (!root) { return; }
-  for (int i=0; i<root->child_count;++i) {
-    lx4c_free(root->children[i]);
-  }
+  for (int i = 0; i < root->child_count; ++i) { lx4c_free(root->children[i]); }
   free(root->children);
   free(root);
 }
+
+const char *node_type_to_str[] = {
+  "IDENT", "NUMBER", "OP",  "TEXT",   "ROW",  "FRAC",  "SQRT",
+  "ROOT",  "SUP",    "SUB", "SUBSUP", "OVER", "UNDER", "UNKNOWN",
+};
+
+void print_node(lx4c_node *n, int depth) {
+  if (!n) { return; }
+  for (int i = 0; i < depth; ++i) { printf(" "); }
+
+  printf("[%s] ", node_type_to_str[n->type]);
+  if (n->value) { printf("%.*s", (int)n->value_len, n->value); }
+  if (n->symbol) { printf("(%s)", n->symbol); }
+  printf("\n");
+
+  for (int i = 0; i < n->child_count; ++i) {
+    print_node(n->children[i], depth + 1);
+  }
+}
+
+void print_ast(lx4c_node *root) { print_node(root, 0); }

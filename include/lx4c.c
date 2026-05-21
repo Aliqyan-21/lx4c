@@ -158,9 +158,17 @@ static const cmd_entry *cmd_lookup(const char *name, size_t len) {
   return NULL;
 }
 
+static lx4c_node *parse_row(lx4c_parser *p, lx4c_token_type stop);
+
 static lx4c_node *parse_group(lx4c_parser *p) {
-  // todo: implement
-  return NULL;
+  /* expect { -> consume */
+  if (p->curr.type == TOK_LBRACE) { parser_advance(p); }
+  /* parse after '{' till '}' */
+  lx4c_node *row = parse_row(p, TOK_RBRACE);
+  if (p->curr.type == TOK_RBRACE) {
+    parser_advance(p);  // consume '}'
+  }
+  return row;
 }
 
 static lx4c_node *node_alloc(lx4c_node_type type) {

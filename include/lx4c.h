@@ -2,6 +2,7 @@
 #define LX4C_H
 
 #include <stddef.h>
+#include <stdlib.h>
 #ifdef __cplusplus
 extern "C" {
 #endif

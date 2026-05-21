@@ -306,21 +306,83 @@ static lx4c_node *parse_atom(lx4c_parser *p) {
   }
 }
 
-lx4c_node *lx4c_parse(const char *latex, size_t len) {
-  static const char *tests[] = {
-    "x", "42", "3.14", "\\alpha", "\\sin", "\\leq", "+", "\\unknown",
-  };
+static const int CHILDREN_INIT = 8;
 
-  for (size_t i = 0; i < sizeof(tests) / sizeof(tests[0]); i++) {
-    lx4c_parser p;
-    parser_init(&p, tests[i], strlen(tests[i]));
-    lx4c_node *n = parse_atom(&p);
-    if (!n) {
-      printf("%-12s → NULL\n", tests[i]);
-      continue;
+static lx4c_node *parse_row(lx4c_parser *p, lx4c_token_type stop) {
+  lx4c_node *row = node_alloc(LX4C_NODE_ROW);
+  if (!row) { return NULL; }
+
+  size_t capacity = CHILDREN_INIT;
+  row->children   = malloc(capacity * sizeof(lx4c_node *));
+  if (!row->children) { return NULL; }
+  row->child_count = 0;
+
+  while (p->curr.type != stop && p->curr.type != TOK_EOF) {
+    lx4c_node *atom = parse_atom(p);
+    if (!atom) { break; }
+
+    int has_sup = (p->curr.type == TOK_SUP);
+    int has_sub = (p->curr.type == TOK_SUB);
+
+    if (!has_sup && !has_sub) {
+      /* plain atom so just append */
+      goto append;
     }
-    printf("%-12s → type=%-10d value=%.*s symbol=%s\n", tests[i], n->type,
-           (int)n->value_len, n->value, n->symbol ? n->symbol : "NULL");
+
+    lx4c_node *sub_node = NULL;
+    lx4c_node *sup_node = NULL;
+
+    if (has_sub) {
+      parser_advance(p);
+      sub_node = parse_group(p);
+      has_sup  = (p->curr.type == TOK_SUP);
+    }
+    if (has_sup) {
+      parser_advance(p);
+      sup_node = parse_group(p);
+      if (!has_sub) { has_sub = (p->curr.type == TOK_SUB); }
+      if (has_sub && !sub_node) {
+        parser_advance(p);
+        sub_node = parse_group(p);
+      }
+    }
+    if (sub_node && sup_node) {
+      lx4c_node *ss   = node_alloc(LX4C_NODE_SUBSUP);
+      ss->children    = malloc(3 * sizeof(lx4c_node *));
+      ss->children[0] = atom;
+      ss->children[1] = sub_node;
+      ss->children[2] = sup_node;
+      ss->child_count = 3;
+      atom            = ss;
+    } else if (sup_node) {
+      lx4c_node *s   = node_alloc(LX4C_NODE_SUP);
+      s->children    = malloc(2 * sizeof(lx4c_node *));
+      s->children[0] = atom;
+      s->children[1] = sup_node;
+      s->child_count = 2;
+      atom           = s;
+    } else if (sub_node) {
+      lx4c_node *s   = node_alloc(LX4C_NODE_SUB);
+      s->children    = malloc(2 * sizeof(lx4c_node *));
+      s->children[0] = atom;
+      s->children[1] = sub_node;
+      s->child_count = 2;
+      atom           = s;
+    }
+
+append:
+    if (row->child_count == (int)capacity) {
+      capacity += 2;
+      row->children = realloc(row->children, capacity * sizeof(lx4c_node *));
+      if (!row->children) { return NULL; }
+    }
+    row->children[row->child_count++] = atom;
   }
-  return NULL;
+  return row;
+}
+
+lx4c_node *lx4c_parse(const char *latex, size_t len) {
+  lx4c_parser p;
+  parser_init(&p, latex, len);
+  return parse_row(&p, TOK_EOF);
 }

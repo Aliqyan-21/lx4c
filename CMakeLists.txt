@@ -17,11 +17,13 @@ message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
 set(SOURCES
     include/lx4c.c
+    include/lx_to_mathml.c
     test/main.c
 )
 
 set(HEADERS
     include/lx4c.h
+    include/lx_to_mathml.h
 )
 
 set(COMPILE_FLAGS_DEBUG -Wall -ggdb3 -O0)

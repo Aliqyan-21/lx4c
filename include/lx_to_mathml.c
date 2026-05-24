@@ -1,4 +1,5 @@
 #include "lx_to_mathml.h"
+#include <stdio.h>
 
 void lx4c_accept(lx4c_node *node, const lx4c_visitor *v, void *ctx) {
   if (!node || !v) { return; }
@@ -19,4 +20,72 @@ void lx4c_accept(lx4c_node *node, const lx4c_visitor *v, void *ctx) {
     case LX4C_NODE_UNDER: v->visit_under(node, ctx, v); break;
     default: v->visit_unknown(node, ctx, v); break;
   }
+}
+
+void append_buf(lx4c_buffer *b, const char *s) {
+  size_t slen = strlen(s);
+  if (b->len + slen + 1 > b->cap) {
+    b->cap = (b->len + slen + 1) * 2;
+    b->buf = realloc(b->buf, b->cap);
+  }
+  memcpy(b->buf + b->len, s, slen);
+  b->len += slen;
+  b->buf[b->len] = '\0';
+}
+
+static void visit_row(lx4c_node *n, void *ctx, const lx4c_visitor *v) {
+  lx4c_buffer *b = ctx;
+  append_buf(b, "<mrow>");
+  for (int i = 0; i < n->child_count; i++) {
+    lx4c_accept(n->children[i], v, ctx);
+  }
+  append_buf(b, "</mrow>");
+}
+
+void visit_ident(lx4c_node *n, void *ctx, const lx4c_visitor *v) {
+  lx4c_buffer *b = ctx;
+  if (n->symbol) {
+    append_buf(b, "<mi>");
+    append_buf(b, n->symbol);
+    append_buf(b, "</mi>");
+  } else {
+    char tmp[64];
+    snprintf(tmp, sizeof(tmp), "<mi>%.*s</mi>", (int)n->value_len, n->value);
+    append_buf(b, tmp);
+  }
+}
+
+void visit_number(lx4c_node *n, void *ctx, const lx4c_visitor *v) {
+  lx4c_buffer *b = ctx;
+  char         tmp[64];
+  snprintf(tmp, sizeof(tmp), "<mn>%.*s</mn>", (int)n->value_len, n->value);
+  append_buf(b, tmp);
+}
+
+static void visit_op(lx4c_node *n, void *ctx, const lx4c_visitor *v) {
+  lx4c_buffer *b = ctx;
+  append_buf(b, "<mo>");
+  if (n->symbol) {
+    append_buf(b, n->symbol);
+  } else {
+    char tmp[64];
+    snprintf(tmp, sizeof(tmp), "%.*s", (int)n->value_len, n->value);
+    append_buf(b, tmp);
+  }
+  append_buf(b, "</mo>");
+}
+
+char *lx4c_to_mathml(lx4c_node *root, bool display) {
+  static const lx4c_visitor mathml_visitor = {
+    .visit_ident  = visit_ident,
+    .visit_number = visit_number,
+    .visit_op     = visit_op,
+    .visit_row    = visit_row,
+  };
+
+  lx4c_buffer b = {0};
+  append_buf(&b, display ? "<math display=\"block\">" : "<math>");
+  lx4c_accept(root, &mathml_visitor, &b);
+  append_buf(&b, "</math>");
+  return b.buf;
 }

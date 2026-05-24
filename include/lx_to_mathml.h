@@ -1,6 +1,8 @@
 #ifndef LX_TO_MATHML_H
 #define LX_TO_MATHML_H
 
+#include <string.h>
+#include <stdbool.h>
 #include "lx4c.h"
 
 typedef struct lx4c_visitor lx4c_visitor;
@@ -22,8 +24,16 @@ struct lx4c_visitor {
   void (*visit_unknown)(lx4c_node *node, void *ctx, const lx4c_visitor *v);
 };
 
+typedef struct {
+  char  *buf;
+  size_t len;
+  size_t cap;
+} lx4c_buffer; /* buffer for visitors: they must too dump somehwere afterall */
+
+void append_buf(lx4c_buffer *b, const char *s);
+
 void lx4c_accept(lx4c_node *node, const lx4c_visitor *v, void *ctx);
 
-char *lx4c_to_mathml(lx4c_node *root);
+char *lx4c_to_mathml(lx4c_node *root, bool display);
 
 #endif  //! LX_TO_MATHML_H

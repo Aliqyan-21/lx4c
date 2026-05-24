@@ -129,82 +129,82 @@ static lx4c_token tokenize_next(lx4c_lexer *lex) {
 
 cmd_entry CMD_TABLE[] = {
   /* the greek letters */
-  {"alpha",      CMD_IDENT, "α"  },
-  {"beta",       CMD_IDENT, "β"  },
-  {"gamma",      CMD_IDENT, "γ"  },
-  {"delta",      CMD_IDENT, "δ"  },
-  {"epsilon",    CMD_IDENT, "ε"  },
-  {"theta",      CMD_IDENT, "θ"  },
-  {"lambda",     CMD_IDENT, "λ"  },
-  {"mu",         CMD_IDENT, "μ"  },
-  {"pi",         CMD_IDENT, "π"  },
-  {"sigma",      CMD_IDENT, "σ"  },
-  {"phi",        CMD_IDENT, "φ"  },
-  {"omega",      CMD_IDENT, "ω"  },
-  {"Gamma",      CMD_IDENT, "Γ"  },
-  {"Delta",      CMD_IDENT, "Δ"  },
-  {"Sigma",      CMD_IDENT, "Σ"  },
-  {"Omega",      CMD_IDENT, "Ω"  },
+  {"alpha",      CMD_IDENT, "α"      },
+  {"beta",       CMD_IDENT, "β"      },
+  {"gamma",      CMD_IDENT, "γ"      },
+  {"delta",      CMD_IDENT, "δ"      },
+  {"epsilon",    CMD_IDENT, "ε"      },
+  {"theta",      CMD_IDENT, "θ"      },
+  {"lambda",     CMD_IDENT, "λ"      },
+  {"mu",         CMD_IDENT, "μ"      },
+  {"pi",         CMD_IDENT, "π"      },
+  {"sigma",      CMD_IDENT, "σ"      },
+  {"phi",        CMD_IDENT, "φ"      },
+  {"omega",      CMD_IDENT, "ω"      },
+  {"Gamma",      CMD_IDENT, "Γ"      },
+  {"Delta",      CMD_IDENT, "Δ"      },
+  {"Sigma",      CMD_IDENT, "Σ"      },
+  {"Omega",      CMD_IDENT, "Ω"      },
   /* the named functions */
-  {"sin",        CMD_IDENT, "sin"},
-  {"cos",        CMD_IDENT, "cos"},
-  {"tan",        CMD_IDENT, "tan"},
-  {"log",        CMD_IDENT, "log"},
-  {"ln",         CMD_IDENT, "ln" },
-  {"exp",        CMD_IDENT, "exp"},
-  {"max",        CMD_IDENT, "max"},
-  {"min",        CMD_IDENT, "min"},
-  {"lim",        CMD_IDENT, "lim"},
+  {"sin",        CMD_IDENT, "sin"    },
+  {"cos",        CMD_IDENT, "cos"    },
+  {"tan",        CMD_IDENT, "tan"    },
+  {"log",        CMD_IDENT, "log"    },
+  {"ln",         CMD_IDENT, "ln"     },
+  {"exp",        CMD_IDENT, "exp"    },
+  {"max",        CMD_IDENT, "max"    },
+  {"min",        CMD_IDENT, "min"    },
+  {"lim",        CMD_IDENT, "lim"    },
   /* the operators */
-  {"leq",        CMD_OP,    "≤"  },
-  {"geq",        CMD_OP,    "≥"  },
-  {"neq",        CMD_OP,    "≠"  },
-  {"times",      CMD_OP,    "×"  },
-  {"cdot",       CMD_OP,    "·"  },
-  {"div",        CMD_OP,    "÷"  },
-  {"pm",         CMD_OP,    "±"  },
-  {"infty",      CMD_OP,    "∞"  },
-  {"partial",    CMD_OP,    "∂"  },
-  {"nabla",      CMD_OP,    "∇"  },
-  {"sum",        CMD_OP,    "∑"  },
-  {"prod",       CMD_OP,    "∏"  },
-  {"int",        CMD_OP,    "∫"  },
-  {"approx",     CMD_OP,    "≈"  },
-  {"in",         CMD_OP,    "∈"  },
-  {"subset",     CMD_OP,    "⊂"  },
-  {"cup",        CMD_OP,    "∪"  },
-  {"cap",        CMD_OP,    "∩"  },
-  {"to",         CMD_OP,    "→"  },
-  {"rightarrow", CMD_OP,    "→"  },
-  {"leftarrow",  CMD_OP,    "←"  },
-  {"forall",     CMD_OP,    "∀"  },
-  {"exists",     CMD_OP,    "∃"  },
-  {"neg",        CMD_OP,    "¬"  },
-  {"land",       CMD_OP,    "∧"  },
-  {"lor",        CMD_OP,    "∨"  },
-  {"equiv",      CMD_OP,    "≡"  },
-  {"sim",        CMD_OP,    "∼"  },
+  {"leq",        CMD_OP,    "≤"      },
+  {"geq",        CMD_OP,    "≥"      },
+  {"neq",        CMD_OP,    "≠"      },
+  {"times",      CMD_OP,    "×"      },
+  {"cdot",       CMD_OP,    "·"      },
+  {"div",        CMD_OP,    "÷"      },
+  {"pm",         CMD_OP,    "±"      },
+  {"infty",      CMD_OP,    "∞"      },
+  {"partial",    CMD_OP,    "∂"      },
+  {"nabla",      CMD_OP,    "∇"      },
+  {"sum",        CMD_OP,    "∑"      },
+  {"prod",       CMD_OP,    "∏"      },
+  {"int",        CMD_OP,    "∫"      },
+  {"approx",     CMD_OP,    "≈"      },
+  {"in",         CMD_OP,    "∈"      },
+  {"subset",     CMD_OP,    "⊂"      },
+  {"cup",        CMD_OP,    "∪"      },
+  {"cap",        CMD_OP,    "∩"      },
+  {"to",         CMD_OP,    "→"      },
+  {"rightarrow", CMD_OP,    "→"      },
+  {"leftarrow",  CMD_OP,    "←"      },
+  {"forall",     CMD_OP,    "∀"      },
+  {"exists",     CMD_OP,    "∃"      },
+  {"neg",        CMD_OP,    "¬"      },
+  {"land",       CMD_OP,    "∧"      },
+  {"lor",        CMD_OP,    "∨"      },
+  {"equiv",      CMD_OP,    "≡"      },
+  {"sim",        CMD_OP,    "∼"      },
   /* the structural */
-  {"frac",       CMD_FRAC,  NULL },
-  {"sqrt",       CMD_SQRT,  NULL },
-  {"overline",   CMD_OVER,  "‾"  },
-  {"vec",        CMD_VEC,   "→"  },
-  {"underline",  CMD_UNDER, "_"  },
-  {"text",       CMD_TEXT,  NULL },
+  {"frac",       CMD_FRAC,  NULL     },
+  {"sqrt",       CMD_SQRT,  NULL     },
+  {"overline",   CMD_OVER,  "‾"      },
+  {"vec",        CMD_VEC,   "→"      },
+  {"underline",  CMD_UNDER, "&#x332;"},
+  {"text",       CMD_TEXT,  NULL     },
   /* the accents */
-  {"hat",        CMD_OVER,  "^"  },
-  {"bar",        CMD_OVER,  "‾"  },
-  {"tilde",      CMD_OVER,  "~"  },
-  {"dot",        CMD_OVER,  "˙"  },
-  {"ddot",       CMD_OVER,  "¨"  },
+  {"hat",        CMD_OVER,  "^"      },
+  {"bar",        CMD_OVER,  "‾"      },
+  {"tilde",      CMD_OVER,  "~"      },
+  {"dot",        CMD_OVER,  "˙"      },
+  {"ddot",       CMD_OVER,  "¨"      },
   /* the ellipsis */
-  {"cdots",      CMD_OP,    "⋯"  },
-  {"ldots",      CMD_OP,    "…"  },
-  {"vdots",      CMD_OP,    "⋮"  },
+  {"cdots",      CMD_OP,    "⋯"      },
+  {"ldots",      CMD_OP,    "…"      },
+  {"vdots",      CMD_OP,    "⋮"      },
   /* the spacing */
-  {"quad",       CMD_OP,    " "  },
+  {"quad",       CMD_OP,    " "      },
   /* the binomial */
-  {"binom",      CMD_FRAC,  NULL },
+  {"binom",      CMD_FRAC,  NULL     },
 };
 
 typedef struct {
@@ -226,7 +226,7 @@ static lx4c_token parser_advance(lx4c_parser *p) {
   return tok;
 }
 
-const int CMD_T_SIZE = (sizeof(CMD_TABLE) / sizeof(CMD_TABLE[0]));
+static const int CMD_T_SIZE = (sizeof(CMD_TABLE) / sizeof(CMD_TABLE[0]));
 
 static const cmd_entry *cmd_lookup(const char *name, size_t len) {
   for (size_t i = 0; i < CMD_T_SIZE; ++i) {
@@ -417,13 +417,13 @@ static lx4c_node *parse_row(lx4c_parser *p, lx4c_token_type stop) {
     int has_sup = (p->curr.type == TOK_SUP);
     int has_sub = (p->curr.type == TOK_SUB);
 
+    lx4c_node *sub_node = NULL;
+    lx4c_node *sup_node = NULL;
+
     if (!has_sup && !has_sub) {
       /* plain atom so just append */
       goto append;
     }
-
-    lx4c_node *sub_node = NULL;
-    lx4c_node *sup_node = NULL;
 
     if (has_sub) {
       parser_advance(p);

@@ -161,7 +161,7 @@ void visit_under(lx4c_node *n, void *ctx, const lx4c_visitor *v) {
   for (int i = 0; i < n->child_count; ++i) {
     lx4c_accept(n->children[i], v, ctx);
   }
-  append_buf(b, "<mo>_</mo>");
+  append_buf(b, "<mo>&#x332;</mo>");
   append_buf(b, "</munder>");
 }
 

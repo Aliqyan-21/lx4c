@@ -1,8 +1,8 @@
 #ifndef LX_TO_MATHML_H
 #define LX_TO_MATHML_H
 
-#include <string.h>
 #include <stdbool.h>
+#include <string.h>
 #include "lx4c.h"
 
 typedef struct lx4c_visitor lx4c_visitor;

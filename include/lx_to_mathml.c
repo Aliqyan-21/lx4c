@@ -70,6 +70,13 @@ static void visit_op(lx4c_node *n, void *ctx, const lx4c_visitor *v) {
   append_buf(b, "</mo>");
 }
 
+static void visit_text(lx4c_node *n, void *ctx, const lx4c_visitor *v) {
+  lx4c_buffer *b = ctx;
+  append_buf(b, "<mtext>");
+  lx4c_accept(n->children[0], v, ctx);
+  append_buf(b, "</mtext>");
+}
+
 /* ---------------- */
 /* STRUCTURAL NODES */
 /* ---------------- */
@@ -87,6 +94,7 @@ char *lx4c_to_mathml(lx4c_node *root, bool display) {
     .visit_ident  = visit_ident,
     .visit_number = visit_number,
     .visit_op     = visit_op,
+    .visit_text   = visit_text,
     .visit_row    = visit_row,
   };
 

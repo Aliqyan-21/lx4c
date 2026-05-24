@@ -239,16 +239,20 @@ static const cmd_entry *cmd_lookup(const char *name, size_t len) {
 }
 
 static lx4c_node *parse_row(lx4c_parser *p, lx4c_token_type stop);
+static lx4c_node *parse_atom(lx4c_parser *p);
 
 static lx4c_node *parse_group(lx4c_parser *p) {
-  /* expect { -> consume */
-  if (p->curr.type == TOK_LBRACE) { parser_advance(p); }
-  /* parse after '{' till '}' */
-  lx4c_node *row = parse_row(p, TOK_RBRACE);
-  if (p->curr.type == TOK_RBRACE) {
-    parser_advance(p);  // consume '}'
+  if (p->curr.type == TOK_LBRACE) {
+    /* expect { -> consume */
+    parser_advance(p);
+    lx4c_node *row = parse_row(p, TOK_RBRACE);
+    if (p->curr.type == TOK_RBRACE) {
+      /* parse after '{' till '}' */
+      parser_advance(p);  // consume '}'
+    }
+    return row;
   }
-  return row;
+  return parse_atom(p);
 }
 
 static lx4c_node *node_alloc(lx4c_node_type type) {

@@ -33,14 +33,9 @@ void append_buf(lx4c_buffer *b, const char *s) {
   b->buf[b->len] = '\0';
 }
 
-static void visit_row(lx4c_node *n, void *ctx, const lx4c_visitor *v) {
-  lx4c_buffer *b = ctx;
-  append_buf(b, "<mrow>");
-  for (int i = 0; i < n->child_count; i++) {
-    lx4c_accept(n->children[i], v, ctx);
-  }
-  append_buf(b, "</mrow>");
-}
+/* ---------- */
+/* LEAF NODES */
+/* ---------- */
 
 void visit_ident(lx4c_node *n, void *ctx, const lx4c_visitor *v) {
   lx4c_buffer *b = ctx;
@@ -73,6 +68,18 @@ static void visit_op(lx4c_node *n, void *ctx, const lx4c_visitor *v) {
     append_buf(b, tmp);
   }
   append_buf(b, "</mo>");
+}
+
+/* ---------------- */
+/* STRUCTURAL NODES */
+/* ---------------- */
+static void visit_row(lx4c_node *n, void *ctx, const lx4c_visitor *v) {
+  lx4c_buffer *b = ctx;
+  append_buf(b, "<mrow>");
+  for (int i = 0; i < n->child_count; i++) {
+    lx4c_accept(n->children[i], v, ctx);
+  }
+  append_buf(b, "</mrow>");
 }
 
 char *lx4c_to_mathml(lx4c_node *root, bool display) {

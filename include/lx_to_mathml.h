@@ -5,6 +5,9 @@
 #include <string.h>
 #include "lx4c.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 typedef struct lx4c_visitor lx4c_visitor;
 
 struct lx4c_visitor {
@@ -36,4 +39,7 @@ void lx4c_accept(lx4c_node *node, const lx4c_visitor *v, void *ctx);
 
 char *lx4c_to_mathml(lx4c_node *root, bool display);
 
+#ifdef __cplusplus
+}
+#endif
 #endif  //! LX_TO_MATHML_H

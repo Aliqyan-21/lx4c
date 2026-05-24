@@ -116,6 +116,33 @@ void visit_root(lx4c_node *n, void *ctx, const lx4c_visitor *v) {
   append_buf(b, "</mroot>");
 }
 
+void visit_sup(lx4c_node *n, void *ctx, const lx4c_visitor *v) {
+  lx4c_buffer *b = ctx;
+  append_buf(b, "<msup>");
+  for (int i = 0; i < n->child_count; ++i) {
+    lx4c_accept(n->children[i], v, ctx);
+  }
+  append_buf(b, "</msup>");
+}
+
+void visit_sub(lx4c_node *n, void *ctx, const lx4c_visitor *v) {
+  lx4c_buffer *b = ctx;
+  append_buf(b, "<msub>");
+  for (int i = 0; i < n->child_count; ++i) {
+    lx4c_accept(n->children[i], v, ctx);
+  }
+  append_buf(b, "</msub>");
+}
+
+void visit_subsup(lx4c_node *n, void *ctx, const lx4c_visitor *v) {
+  lx4c_buffer *b = ctx;
+  append_buf(b, "<msubsup>");
+  for (int i = 0; i < n->child_count; ++i) {
+    lx4c_accept(n->children[i], v, ctx);
+  }
+  append_buf(b, "</msubsup>");
+}
+
 char *lx4c_to_mathml(lx4c_node *root, bool display) {
   static const lx4c_visitor mathml_visitor = {
     .visit_ident  = visit_ident,
@@ -126,6 +153,9 @@ char *lx4c_to_mathml(lx4c_node *root, bool display) {
     .visit_frac   = visit_frac,
     .visit_sqrt   = visit_sqrt,
     .visit_root   = visit_root,
+    .visit_sup    = visit_sup,
+    .visit_sub    = visit_sub,
+    .visit_subsup = visit_subsup,
   };
 
   lx4c_buffer b = {0};

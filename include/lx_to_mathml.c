@@ -89,6 +89,33 @@ static void visit_row(lx4c_node *n, void *ctx, const lx4c_visitor *v) {
   append_buf(b, "</mrow>");
 }
 
+void visit_frac(lx4c_node *n, void *ctx, const lx4c_visitor *v) {
+  lx4c_buffer *b = ctx;
+  append_buf(b, "<mfrac>");
+  for (int i = 0; i < n->child_count; ++i) {
+    lx4c_accept(n->children[i], v, ctx);
+  }
+  append_buf(b, "</mfrac>");
+}
+
+void visit_sqrt(lx4c_node *n, void *ctx, const lx4c_visitor *v) {
+  lx4c_buffer *b = ctx;
+  append_buf(b, "<msqrt>");
+  for (int i = 0; i < n->child_count; ++i) {
+    lx4c_accept(n->children[i], v, ctx);
+  }
+  append_buf(b, "</msqrt>");
+}
+
+void visit_root(lx4c_node *n, void *ctx, const lx4c_visitor *v) {
+  lx4c_buffer *b = ctx;
+  append_buf(b, "<mroot>");
+  for (int i = 0; i < n->child_count; ++i) {
+    lx4c_accept(n->children[i], v, ctx);
+  }
+  append_buf(b, "</mroot>");
+}
+
 char *lx4c_to_mathml(lx4c_node *root, bool display) {
   static const lx4c_visitor mathml_visitor = {
     .visit_ident  = visit_ident,
@@ -96,6 +123,9 @@ char *lx4c_to_mathml(lx4c_node *root, bool display) {
     .visit_op     = visit_op,
     .visit_text   = visit_text,
     .visit_row    = visit_row,
+    .visit_frac   = visit_frac,
+    .visit_sqrt   = visit_sqrt,
+    .visit_root   = visit_root,
   };
 
   lx4c_buffer b = {0};
